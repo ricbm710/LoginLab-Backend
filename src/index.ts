@@ -1,12 +1,21 @@
-import express, { Request, Response } from "express";
+import express from "express";
+import db from "./database/db";
 
 const app = express();
 const PORT = 3000;
 
 app.use(express.json());
 
-app.get("/", (req: Request, res: Response) => {
-  res.send("Server running with TypeScript 🚀");
+// Test route to confirm DB works
+app.get("/health", (req, res) => {
+  const row = db.prepare("SELECT datetime('now') as now").get() as {
+    now: string;
+  };
+
+  res.json({
+    status: "ok",
+    dbTime: row?.now,
+  });
 });
 
 app.listen(PORT, () => {
